@@ -1,0 +1,8 @@
+//
+// Created by Julia on 19.12.2021.
+//
+
+#ifndef NETSIM_STORAGE_TYPES_HPP_HPP
+#define NETSIM_STORAGE_TYPES_HPP_HPP
+
+#endif //NETSIM_STORAGE_TYPES_HPP_HPP
