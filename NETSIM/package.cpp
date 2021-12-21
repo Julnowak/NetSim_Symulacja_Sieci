@@ -4,4 +4,3 @@
 
 #include "package.hpp"
 #include "types.hpp"
-}
