@@ -31,9 +31,6 @@ public:
 
     virtual ~IPackageStockpile() = default;     // Wirtualny destruktor
 
-protected:
-    std::list<Package> queue;
-    PackageQueueType queueType;
 };
 
 
@@ -46,6 +43,9 @@ public:
 
 class PackageQueue : public IPackageQueue {
 public:
+    std::list<Package> queue;
+    PackageQueueType queueType;
+
     explicit PackageQueue(PackageQueueType type) { queueType = type;};
 
     // Po pierwszej klasie

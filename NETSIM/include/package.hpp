@@ -19,7 +19,7 @@ public:
 
 private:
     ElementID _id = 0;
-    inline static std::set<ElementID> assigned_IDs{0};
+    inline static std::set<ElementID> assigned_IDs;
     inline static std::set<ElementID> freed_IDs;
 };
 
