@@ -41,49 +41,52 @@ include CMakeFiles/rules.ninja
 
 cmake_ninja_workdir = C$:/Users/Julia/CLionProjects/NETSIM/cmake-build-debug/
 # =============================================================================
-# Object build statements for EXECUTABLE target NETSIM
+# Object build statements for EXECUTABLE target netsim_tests_debug
 
 
 #############################################
-# Order-only phony target for NETSIM
+# Order-only phony target for netsim_tests_debug
 
-build cmake_object_order_depends_target_NETSIM: phony || CMakeFiles/NETSIM.dir
+build cmake_object_order_depends_target_netsim_tests_debug: phony || CMakeFiles/netsim_tests_debug.dir
 
-build CMakeFiles/NETSIM.dir/main.cpp.obj: CXX_COMPILER__NETSIM_Debug C$:/Users/Julia/CLionProjects/NETSIM/main.cpp || cmake_object_order_depends_target_NETSIM
-  DEP_FILE = CMakeFiles\NETSIM.dir\main.cpp.obj.d
+build CMakeFiles/netsim_tests_debug.dir/src/package.cpp.obj: CXX_COMPILER__netsim_tests_debug_Debug C$:/Users/Julia/CLionProjects/NETSIM/src/package.cpp || cmake_object_order_depends_target_netsim_tests_debug
+  DEP_FILE = CMakeFiles\netsim_tests_debug.dir\src\package.cpp.obj.d
   FLAGS = -g -Wall -Wextra -Werror -Wpedantic -pedantic-errors -Wconversion -std=gnu++17
-  OBJECT_DIR = CMakeFiles\NETSIM.dir
-  OBJECT_FILE_DIR = CMakeFiles\NETSIM.dir
+  INCLUDES = -IC:/Users/Julia/CLionProjects/NETSIM/include
+  OBJECT_DIR = CMakeFiles\netsim_tests_debug.dir
+  OBJECT_FILE_DIR = CMakeFiles\netsim_tests_debug.dir\src
 
-build CMakeFiles/NETSIM.dir/package.cpp.obj: CXX_COMPILER__NETSIM_Debug C$:/Users/Julia/CLionProjects/NETSIM/package.cpp || cmake_object_order_depends_target_NETSIM
-  DEP_FILE = CMakeFiles\NETSIM.dir\package.cpp.obj.d
+build CMakeFiles/netsim_tests_debug.dir/src/storage_types.cpp.obj: CXX_COMPILER__netsim_tests_debug_Debug C$:/Users/Julia/CLionProjects/NETSIM/src/storage_types.cpp || cmake_object_order_depends_target_netsim_tests_debug
+  DEP_FILE = CMakeFiles\netsim_tests_debug.dir\src\storage_types.cpp.obj.d
   FLAGS = -g -Wall -Wextra -Werror -Wpedantic -pedantic-errors -Wconversion -std=gnu++17
-  OBJECT_DIR = CMakeFiles\NETSIM.dir
-  OBJECT_FILE_DIR = CMakeFiles\NETSIM.dir
+  INCLUDES = -IC:/Users/Julia/CLionProjects/NETSIM/include
+  OBJECT_DIR = CMakeFiles\netsim_tests_debug.dir
+  OBJECT_FILE_DIR = CMakeFiles\netsim_tests_debug.dir\src
 
-build CMakeFiles/NETSIM.dir/storage_types.hpp.cpp.obj: CXX_COMPILER__NETSIM_Debug C$:/Users/Julia/CLionProjects/NETSIM/storage_types.hpp.cpp || cmake_object_order_depends_target_NETSIM
-  DEP_FILE = CMakeFiles\NETSIM.dir\storage_types.hpp.cpp.obj.d
+build CMakeFiles/netsim_tests_debug.dir/main.cpp.obj: CXX_COMPILER__netsim_tests_debug_Debug C$:/Users/Julia/CLionProjects/NETSIM/main.cpp || cmake_object_order_depends_target_netsim_tests_debug
+  DEP_FILE = CMakeFiles\netsim_tests_debug.dir\main.cpp.obj.d
   FLAGS = -g -Wall -Wextra -Werror -Wpedantic -pedantic-errors -Wconversion -std=gnu++17
-  OBJECT_DIR = CMakeFiles\NETSIM.dir
-  OBJECT_FILE_DIR = CMakeFiles\NETSIM.dir
+  INCLUDES = -IC:/Users/Julia/CLionProjects/NETSIM/include
+  OBJECT_DIR = CMakeFiles\netsim_tests_debug.dir
+  OBJECT_FILE_DIR = CMakeFiles\netsim_tests_debug.dir
 
 
 # =============================================================================
-# Link build statements for EXECUTABLE target NETSIM
+# Link build statements for EXECUTABLE target netsim_tests_debug
 
 
 #############################################
-# Link the executable NETSIM.exe
+# Link the executable netsim_tests_debug.exe
 
-build NETSIM.exe: CXX_EXECUTABLE_LINKER__NETSIM_Debug CMakeFiles/NETSIM.dir/main.cpp.obj CMakeFiles/NETSIM.dir/package.cpp.obj CMakeFiles/NETSIM.dir/storage_types.hpp.cpp.obj
+build netsim_tests_debug.exe: CXX_EXECUTABLE_LINKER__netsim_tests_debug_Debug CMakeFiles/netsim_tests_debug.dir/src/package.cpp.obj CMakeFiles/netsim_tests_debug.dir/src/storage_types.cpp.obj CMakeFiles/netsim_tests_debug.dir/main.cpp.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
-  OBJECT_DIR = CMakeFiles\NETSIM.dir
+  OBJECT_DIR = CMakeFiles\netsim_tests_debug.dir
   POST_BUILD = cd .
   PRE_LINK = cd .
-  TARGET_FILE = NETSIM.exe
-  TARGET_IMPLIB = libNETSIM.dll.a
-  TARGET_PDB = NETSIM.exe.dbg
+  TARGET_FILE = netsim_tests_debug.exe
+  TARGET_IMPLIB = libnetsim_tests_debug.dll.a
+  TARGET_PDB = netsim_tests_debug.exe.dbg
 
 
 #############################################
@@ -111,7 +114,7 @@ build rebuild_cache: phony CMakeFiles/rebuild_cache.util
 # =============================================================================
 # Target aliases.
 
-build NETSIM: phony NETSIM.exe
+build netsim_tests_debug: phony netsim_tests_debug.exe
 
 # =============================================================================
 # Folder targets.
@@ -121,7 +124,7 @@ build NETSIM: phony NETSIM.exe
 #############################################
 # Folder: C:/Users/Julia/CLionProjects/NETSIM/cmake-build-debug
 
-build all: phony NETSIM.exe
+build all: phony netsim_tests_debug.exe
 
 # =============================================================================
 # Built-in targets
