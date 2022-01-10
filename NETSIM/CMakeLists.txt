@@ -22,8 +22,6 @@ set(SOURCE_FILES
         src/storage_types.cpp
         src/helpers.cpp
         src/factory.cpp
-        src/reports.cpp
-        src/simulation.cpp
         )
 
 # Dodaj konfigurację typu `Debug`.
@@ -35,15 +33,14 @@ add_executable(netsim_debug ${SOURCE_FILES} main.cpp)
 # Ustaw zmienną `SOURCES_FILES_TESTS`, która będzie przechowywać ścieżki do
 # plików źródłowych z testami jednostkowymi.
 set(SOURCES_FILES_TESTS
-        test/test_Factory.cpp
-        test/test_nodes.cpp
-        test/test_package.cpp
-        test/test_package_queue.cpp
-        test/test_storage_types.cpp
+        netsim_tests/test/test_Factory.cpp
+        netsim_tests/test/test_nodes.cpp
+        netsim_tests/test/test_package.cpp
+        netsim_tests/test/test_storage_types.cpp
         )
 
 # Dodaj konfigurację typu `Test`.
-add_executable(netsim_test ${SOURCE_FILES} ${SOURCES_FILES_TESTS} test/main_gtest.cpp)
+add_executable(netsim_test ${SOURCE_FILES} ${SOURCES_FILES_TESTS} netsim_tests/test/main_gtest.cpp)
 
 # Dodaj katalogi z plikami nagłówkowymi wyłącznie do konkretnej konfiguracji (tu: `Test`).
 target_include_directories(netsim_test PUBLIC
