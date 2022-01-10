@@ -5,16 +5,16 @@
 
 #include "factory.hpp"
 
-
 bool Factory::is_consistent() const{
     std::map<const PackageSender *, NodeColor> color;
     for(auto &ramp : Ramps) color[&ramp] = UNVISITED;
     for(auto &worker : Workers) color[&worker] = UNVISITED;
-
+#if (EXERCISE_ID > 2)
     try{
         for(auto &ramp : Ramps) has_reachable_storehouse(&ramp, color);
     }
     catch(std::logic_error&){return false;}
+#endif
     return true;
 }
 
@@ -57,6 +57,7 @@ void Factory::remove_ramp(ElementID id)
     Ramps.remove_by_id(id);
 }
 
+#if (EXERCISE_ID > 2)
 bool has_reachable_storehouse(const PackageSender *sender, std::map<const PackageSender *, NodeColor> &node_colors) {
     if(node_colors[sender] == VERIFIED) return true;
 
@@ -89,3 +90,4 @@ bool has_reachable_storehouse(const PackageSender *sender, std::map<const Packag
 
     else throw std::logic_error("Unreachable Storehouse");
 }
+#endif
