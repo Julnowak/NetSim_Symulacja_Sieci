@@ -24,11 +24,11 @@ enum ReceiverType{
 class IPackageReceiver{
 public:
     using const_it = IPackageStockpile::const_iterator;
-#if (EXERCISE_ID > EXERCISE_ID_NODES)
     virtual void receive_package(Package&& p) = 0;
-#endif
     virtual ElementID get_id() const = 0;
+#if (EXERCISE_ID > 2)
     virtual ReceiverType get_receiver_type () const = 0;
+#endif
 
     // iteratory
     virtual const_it begin() const = 0;
@@ -42,7 +42,7 @@ class Storehouse : public IPackageReceiver {
 public:
     Storehouse(ElementID id, std::unique_ptr<IPackageStockpile> d = std::make_unique<PackageQueue>(PackageQueueType::LIFO)) : _id(id), _d(std::move(d)) {}
 
-#if (EXERCISE_ID > EXERCISE_ID_NODES)
+#if (EXERCISE_ID > 2)
     ReceiverType get_receiver_type() const {return ReceiverType::STOREHOUSE;};
 #endif
 
@@ -120,7 +120,7 @@ public:
     void receive_package(Package&& pack) { _q->push(std::move(pack)); }
     void do_work(Time t);
 
-#if (EXERCISE_ID > EXERCISE_ID_NODES)
+#if (EXERCISE_ID > 2)
     ReceiverType get_receiver_type() const { return ReceiverType::WORKER; };
 #endif
 

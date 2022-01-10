@@ -15,8 +15,9 @@
 enum NodeColor{
     UNVISITED, VISITED, VERIFIED
 };
-
+#if (EXERCISE_ID > 2)
 bool has_reachable_storehouse(const PackageSender* sender, std::map<const PackageSender*, NodeColor>& node_colors);
+#endif
 
 template <typename Node>
 class NodeCollection{
