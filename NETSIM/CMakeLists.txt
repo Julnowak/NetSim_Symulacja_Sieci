@@ -7,7 +7,7 @@ project(NETSIM)
 set(CMAKE_CXX_STANDARD 17)
 
 # Dodaj flagi kompilacji wymuszające pisanie kodu zgodnego ze standardem.
-add_compile_options(-Wall -Wextra -Werror -Wpedantic -pedantic-errors -Wconversion)
+add_compile_options(-Wall -Wextra -Werror -Wpedantic -pedantic-errors)
 
 # Dodaj katalogi z plikami nagłówkowymi dla wszystkich konfiguracji.
 include_directories(
@@ -33,9 +33,9 @@ add_executable(netsim_debug ${SOURCE_FILES} main.cpp)
 # Ustaw zmienną `SOURCES_FILES_TESTS`, która będzie przechowywać ścieżki do
 # plików źródłowych z testami jednostkowymi.
 set(SOURCES_FILES_TESTS
-        netsim_tests/test/test_Factory.cpp
         netsim_tests/test/test_nodes.cpp
         netsim_tests/test/test_package.cpp
+        netsim_tests/test/test_Factory.cpp
         netsim_tests/test/test_storage_types.cpp
         )
 
