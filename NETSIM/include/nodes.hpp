@@ -24,10 +24,11 @@ enum ReceiverType{
 class IPackageReceiver{
 public:
     using const_it = IPackageStockpile::const_iterator;
-
+#if (EXERCISE_ID > EXERCISE_ID_NODES)
     virtual void receive_package(Package&& p) = 0;
+#endif
     virtual ElementID get_id() const = 0;
-    virtual ReceiverType get_receiver_type () = 0;
+    virtual ReceiverType get_receiver_type () const = 0;
 
     // iteratory
     virtual const_it begin() const = 0;
@@ -41,7 +42,10 @@ class Storehouse : public IPackageReceiver {
 public:
     Storehouse(ElementID id, std::unique_ptr<IPackageStockpile> d = std::make_unique<PackageQueue>(PackageQueueType::LIFO)) : _id(id), _d(std::move(d)) {}
 
-    ReceiverType get_receiver_type() {return ReceiverType::STOREHOUSE;};
+#if (EXERCISE_ID > EXERCISE_ID_NODES)
+    ReceiverType get_receiver_type() const {return ReceiverType::STOREHOUSE;};
+#endif
+
     ElementID get_id() const { return _id; }
     void receive_package(Package&& pack) { _d->push(std::move(pack)); }
 
@@ -115,7 +119,10 @@ public:
     ElementID get_id() const { return _id; }
     void receive_package(Package&& pack) { _q->push(std::move(pack)); }
     void do_work(Time t);
-    ReceiverType get_receiver_type() { return ReceiverType::WORKER; };
+
+#if (EXERCISE_ID > EXERCISE_ID_NODES)
+    ReceiverType get_receiver_type() const { return ReceiverType::WORKER; };
+#endif
 
     TimeOffset get_processing_duration () {return _pd;}
     Time get_package_processing_start_time()  {return _t;}
