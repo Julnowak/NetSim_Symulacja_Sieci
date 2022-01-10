@@ -46,15 +46,9 @@ void PackageSender::send_package()
 void ReceiverPreferences::add_receiver(IPackageReceiver* r)
 {
     double preference = 1;
-    double suma = 0;
     preferences[r] = preference;
-    for (auto &i : preferences)
-    {
-        preferences[i.first] = 1 / static_cast<double>(preferences.size());
-        suma = suma + i.second;
-    }
-    if (suma != 1.0) preferences[r] = preferences[r] + 1.0 - suma;
-
+    for(auto &i : preferences) {i.second = 1;}
+    for(auto &i : preferences){ i.second /= static_cast<double>(preferences.size());}
 }
 
 
@@ -78,19 +72,11 @@ IPackageReceiver* ReceiverPreferences::choose_receiver()
 
 
 void ReceiverPreferences::remove_receiver(IPackageReceiver* r){
-    IPackageReceiver* copy_r = r;
-    double suma = 0;
-    preferences.erase(r);
-
-    if(!preferences.empty())
-        {
-            for (const auto &pair : preferences)
-            {
-                preferences[pair.first]= 1.0 / static_cast<double>(preferences.size());
-                suma = suma + pair.second;
-                copy_r  = pair.first;
-            }
-
-            if (suma!= 1.0) preferences[copy_r ] = preferences[copy_r ] + 1.0 - suma;
-        }
+    if(preferences.find(r) != preferences.end())
+    {
+        preferences.erase(r);
+        if (preferences.empty()) return;
+        for(auto &i : preferences) {i.second = 1;}
+        for(auto &i : preferences){ i.second /= static_cast<double>(preferences.size());}
+    }
 }
