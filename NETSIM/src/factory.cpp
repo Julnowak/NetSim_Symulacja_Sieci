@@ -5,118 +5,87 @@
 
 #include "factory.hpp"
 
-struct no_reachable_storehouse_error : public std::exception
-{
-    const char * what () const throw (){return "No reachable storehouse";}
-};
+
+bool Factory::is_consistent() const{
+    std::map<const PackageSender *, NodeColor> color;
+    for(auto &ramp : Ramps) color[&ramp] = UNVISITED;
+    for(auto &worker : Workers) color[&worker] = UNVISITED;
+
+    try{
+        for(auto &ramp : Ramps) has_reachable_storehouse(&ramp, color);
+    }
+    catch(std::logic_error&){return false;}
+    return true;
+}
 
 
-bool Factory::is_consistent()
-{
-    if(Ramps.begin()==Ramps.end()) return false;
-    if(Workers.begin()==Workers.end()) return false;
-    if(Storehouses.begin()==Storehouses.end()) return false;
-
-    bool consistent = true;
-
-    std::for_each
-    (Ramps.begin(),Ramps.end(),[&consistent](Ramp &ramp)
-    {
-        auto preferences=ramp.receiver_preferences_.get_preferences();
-        if(preferences.empty()) consistent=false;
-    });
-
-
-    std::for_each
-    (Workers.begin(),Workers.end(),[this,&consistent](Worker &worker)
-    {
-        auto id=worker.get_id();
-        bool no_empty = false;
-
-        std::for_each
-        (Ramps.begin(),Ramps.end(),[id,&no_empty](Ramp &ramp)
-        {
-            auto preferences= ramp.receiver_preferences_.get_preferences();
-            for(auto & preference : preferences)
-                if(preference.first->get_id()==id) no_empty = true;
-        });
-
-        std::for_each
-        (Workers.begin(),Workers.end(),[id,&no_empty](Worker &worker)
-        {
-            if(worker.get_id() != id)
-            {
-                auto preferences = worker.receiver_preferences_.get_preferences();
-                for (auto & preference : preferences)
-                    if (preference.first->get_id() == id) no_empty = true;
-            }
-        });
-
-        auto workerPreferences = worker.receiver_preferences_.get_preferences();
-        auto workerId = worker.get_id();
-        bool check = false;
-
-        for(auto & workerPreference : workerPreferences)
-        {
-            auto type=workerPreference.first->get_receiver_type();
-            if(workerPreference.first->get_id()!=workerId || type==STOREHOUSE) check = true;
-        }
-
-        if(!no_empty || !check) consistent = false;
-
-    });
-
-
-    std::for_each
-    (Storehouses.begin(),Storehouses.end(),[this,&consistent](Storehouse &storehouse)
-    {
-        auto id= storehouse.get_id();
-        bool no_empty = false;
-
-        std::for_each
-        (Workers.begin(),Workers.end(),[id,&no_empty](Worker &worker)
-        {
-            auto preferences=worker.receiver_preferences_.get_preferences();
-            for(auto & preference : preferences)
-                if(preference.first->get_id()==id) no_empty = true;
-        });
-
-        if(!no_empty) consistent = false;
-    });
-
-    return consistent;
+template<typename Node>
+void Factory::remove_receiver(NodeCollection<Node> &collection, ElementID id) {
+    collection.remove_by_id(id);
+    if(std::is_same<Node, Worker>::value){
+        for(auto &ramp : Ramps) ramp.receiver_preferences_.remove_receiver(&(*find_worker_by_id(id)));
+        for(auto &worker : Workers) worker.receiver_preferences_.remove_receiver(&(*find_worker_by_id(id)));
+    }
+    if(std::is_same<Node, Storehouse>::value){
+        for(auto &ramp : Ramps) ramp.receiver_preferences_.remove_receiver(&(*find_storehouse_by_id(id)));
+        for(auto &worker : Workers) worker.receiver_preferences_.remove_receiver(&(*find_storehouse_by_id(id)));
+    }
 }
 
 
 void Factory::do_package_passing()
 {
-    std::for_each(Ramps.begin(),Ramps.end(),[](Ramp &ramp){ ramp.send_package();});
-    std::for_each(Workers.begin(),Workers.end(),[](Worker &worker){ worker.send_package();});
+    for(auto &ramp : Ramps) ramp.send_package();
+    for(auto &worker : Workers) worker.send_package();
 }
 
 
 void Factory::remove_worker(ElementID id)
 {
-    std::for_each
-    (Ramps.begin(),Ramps.end(),[id](Ramp &ramp)
-    {
-        auto preferences=ramp.receiver_preferences_.get_preferences();
-        for(auto & preference : preferences)
-            if(preference.first->get_id()==id) ramp.receiver_preferences_.remove_receiver(preference.first);
-    });
-
-    Workers.remove_by_id(id);
+    remove_receiver(Workers, id);
 }
+
 
 void Factory::remove_storehouse(ElementID id)
 {
-    std::for_each
-    (Workers.begin(),Workers.end(),[id](Worker &worker)
-    {
-        auto preferences=worker.receiver_preferences_.get_preferences();
-            for(auto & preference : preferences)
-                if(preference.first->get_id()==id) worker.receiver_preferences_.remove_receiver(preference.first);
-    });
+    remove_receiver(Storehouses, id);
+}
 
-    Storehouses.remove_by_id(id);
+
+void Factory::remove_ramp(ElementID id)
+{
+    Ramps.remove_by_id(id);
+}
+
+bool has_reachable_storehouse(const PackageSender *sender, std::map<const PackageSender *, NodeColor> &node_colors) {
+    if(node_colors[sender] == VERIFIED) return true;
+
+    node_colors[sender] = VISITED;
+
+    if(sender->receiver_preferences_.get_preferences().empty()) throw std::logic_error("There are no Receivers");
+
+    bool has_at_least_one_except_self = false;
+
+    for(auto &receiver_pair : sender->receiver_preferences_.get_preferences())
+    {
+        if(receiver_pair.first->get_receiver_type() == STOREHOUSE) has_at_least_one_except_self = true;
+
+        else if (receiver_pair.first->get_receiver_type() == WORKER)
+        {
+            IPackageReceiver* receiver_ptr = receiver_pair.first;
+            auto worker_ptr = dynamic_cast<Worker*>(receiver_ptr);
+            auto sendrcv_ptr = dynamic_cast<PackageSender*>(worker_ptr);
+
+            if(sendrcv_ptr == sender) continue;
+
+            has_at_least_one_except_self = true;
+
+            if(node_colors[sendrcv_ptr] == UNVISITED) has_reachable_storehouse(sendrcv_ptr, node_colors);
+        }
+    }
+    node_colors[sender] = VERIFIED;
+
+    if(has_at_least_one_except_self) return true;
+
+    else throw std::logic_error("Unreachable Storehouse");
 }

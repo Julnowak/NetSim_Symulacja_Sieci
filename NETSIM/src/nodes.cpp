@@ -18,16 +18,16 @@ void Ramp::deliver_goods(Time t)
 
 void Worker::do_work(Time t){
 
-    if (!working && !_q->empty())
-    {
-        working = _q->pop();
-        _t = t;
-    }
-
     if (working && t - _t == _pd - 1)
     {
         push_package(std::move(*working));
         working.reset();
+    }
+
+    if (!working && !_q->empty())
+    {
+        working = _q->pop();
+        _t = t;
     }
 }
 
@@ -43,28 +43,43 @@ void PackageSender::send_package()
 }
 
 
-//bool PackageSender::buffer_empty(){
-//    if (bufor) return true;
- //   else return false;
-//}
-
 void ReceiverPreferences::add_receiver(IPackageReceiver* r)
 {
-    double preference = 1.0;
-    double suma = 0.0;
+    double preference = 1;
+    double suma = 0;
     preferences[r] = preference;
-    for (auto& pair : preferences)
+    for (auto &i : preferences)
     {
-        preferences[pair.first] = 1.0 / static_cast<double>(preferences.size());
-        suma = suma + pair.second;
+        preferences[i.first] = 1 / static_cast<double>(preferences.size());
+        suma = suma + i.second;
     }
     if (suma != 1.0) preferences[r] = preferences[r] + 1.0 - suma;
 
 }
 
+
+IPackageReceiver* ReceiverPreferences::choose_receiver()
+{
+    double los = default_probability_generator();
+    double suma = 0;
+    IPackageReceiver* helper = preferences.rbegin()->first;
+
+    std::map<IPackageReceiver*, double>::reverse_iterator it;
+
+    for (it = preferences.rbegin(); it != preferences.rend(); ++it)
+    {
+        suma = suma + it->second;
+        helper = it->first;
+        if (los < suma) break;
+    }
+
+    return helper;
+}
+
+
 void ReceiverPreferences::remove_receiver(IPackageReceiver* r){
     IPackageReceiver* copy_r = r;
-    double suma = 0.0;
+    double suma = 0;
     preferences.erase(r);
 
     if(!preferences.empty())
@@ -78,23 +93,4 @@ void ReceiverPreferences::remove_receiver(IPackageReceiver* r){
 
             if (suma!= 1.0) preferences[copy_r ] = preferences[copy_r ] + 1.0 - suma;
         }
-}
-
-
-IPackageReceiver* ReceiverPreferences::choose_receiver()
-{
-    double los = default_probability_generator();
-    double dis = 0.0;
-    IPackageReceiver* helper = preferences.rbegin()->first;
-
-    std::map<IPackageReceiver*, double>::reverse_iterator it;
-
-    for (it = preferences.rbegin(); it != preferences.rend(); ++it)
-    {
-        dis = dis + it->second;
-        helper = it->first;
-        if (los < dis) break;
-    }
-
-    return helper;
 }
