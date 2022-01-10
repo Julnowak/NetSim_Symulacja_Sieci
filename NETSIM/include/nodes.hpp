@@ -25,9 +25,9 @@ class IPackageReceiver{
 public:
     using const_it = IPackageStockpile::const_iterator;
 
-    virtual void receive_package(Package&& p) = 0; //
+    virtual void receive_package(Package&& p) = 0;
     virtual ElementID get_id() const = 0;
-    virtual ReceiverType get_receiver_type () = 0; //
+    virtual ReceiverType get_receiver_type () = 0;
 
     // iteratory
     virtual const_it begin() const = 0;
@@ -87,7 +87,6 @@ public:
     //PackageSender(PackageSender&&);
     void send_package();
     std::optional<Package>& get_sending_buffer() {return bufor;}
-    //bool buffer_empty();
     ReceiverPreferences receiver_preferences_;
 
 protected:
@@ -119,7 +118,7 @@ public:
     ReceiverType get_receiver_type() { return ReceiverType::WORKER; };
 
     TimeOffset get_processing_duration () {return _pd;}
-    Time get_package_processing_start_time() {return _t;}
+    Time get_package_processing_start_time()  {return _t;}
 
     // iteratory
     const_it begin() const { return _q->cbegin(); };
@@ -133,11 +132,5 @@ private:
     Time _t;
     std::optional<Package> working;
 };
-
-
-
-
-
-
 
 #endif //NETSIM_NODES_HPP
