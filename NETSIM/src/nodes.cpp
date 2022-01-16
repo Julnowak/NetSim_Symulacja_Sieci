@@ -16,18 +16,23 @@ void Ramp::deliver_goods(Time t)
 }
 
 
-void Worker::do_work(Time t){
-
-    if (working && t - _t == _pd - 1)
+void Worker::do_work(Time t) {
+    if (!_processing_buffer)
     {
-        push_package(std::move(*working));
-        working.reset();
+        if (!_q->empty())
+        {
+            _processing_buffer.emplace(_q->pop());
+            _t = t;
+        }
     }
 
-    if (!working && !_q->empty())
+    if (_processing_buffer)
     {
-        working = _q->pop();
-        _t = t;
+        if ((t - _t) == _pd - 1)
+        {
+            push_package(std::move(_processing_buffer.value()));
+            _processing_buffer.reset();
+        }
     }
 }
 
@@ -52,22 +57,17 @@ void ReceiverPreferences::add_receiver(IPackageReceiver* r)
 }
 
 
-IPackageReceiver* ReceiverPreferences::choose_receiver()
+IPackageReceiver *ReceiverPreferences::choose_receiver ()
 {
-    double los = default_probability_generator();
-    double suma = 0;
-    IPackageReceiver* helper = preferences.rbegin()->first;
-
-    std::map<IPackageReceiver*, double>::reverse_iterator it;
-
-    for (it = preferences.rbegin(); it != preferences.rend(); ++it)
-    {
-        suma = suma + it->second;
-        helper = it->first;
-        if (los < suma) break;
+    double p = _pg();
+    double distributor_value = 0.0;
+    for (auto& item: preferences) {
+        distributor_value = distributor_value + item.second;
+        if (p<=distributor_value) {
+            return item.first;
+        }
     }
-
-    return helper;
+    throw std::runtime_error("Error has occurred in ReceiverPreferences::choose_receiver()");
 }
 
 
