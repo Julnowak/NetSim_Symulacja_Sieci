@@ -22,6 +22,8 @@ set(SOURCE_FILES
         src/storage_types.cpp
         src/helpers.cpp
         src/factory.cpp
+        src/reports.cpp
+        src/simulation.cpp
         )
 
 # Dodaj konfigurację typu `Debug`.
@@ -37,6 +39,9 @@ set(SOURCES_FILES_TESTS
         netsim_tests/test/test_package.cpp
         netsim_tests/test/test_Factory.cpp
         netsim_tests/test/test_storage_types.cpp
+        netsim_tests/test/test_factory_io.cpp
+        netsim_tests/test/test_reports.cpp
+        netsim_tests/test/test_simulate.cpp
         )
 
 # Dodaj konfigurację typu `Test`.
@@ -55,4 +60,4 @@ add_subdirectory(googletest-master)
 # Podlinkuj bibliotekę o identyfikatorze `gmock` (w pliku CMake) wyłącznie do konkretnej
 # konfiguracji (tu: `Test`).
 target_link_libraries(netsim_test gmock)
-target_compile_definitions(netsim_test PUBLIC EXERCISE_ID=1)
+target_compile_definitions(netsim_test PUBLIC EXERCISE_ID=3)
