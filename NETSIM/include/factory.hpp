@@ -7,6 +7,7 @@
 
 #include "nodes.hpp"
 #include "types.hpp"
+#include "../config.hpp"
 
 #include <algorithm>
 #include <exception>
@@ -15,9 +16,9 @@
 enum NodeColor{
     UNVISITED, VISITED, VERIFIED
 };
-#if (EXERCISE_ID > 2)
+
 bool has_reachable_storehouse(const PackageSender* sender, std::map<const PackageSender*, NodeColor>& node_colors);
-#endif
+
 
 template <typename Node>
 class NodeCollection{
@@ -40,6 +41,7 @@ public:
     const_iterator cbegin() const {return Nodes.cbegin();}
     const_iterator cend() const {return Nodes.cend();}
 
+
 private:
     container_t Nodes;
 };
@@ -60,6 +62,7 @@ public:
     void do_package_passing();
     void do_work(Time time) {for(auto &worker:Workers) worker.do_work(time);}
 
+
     // RAMP
     void add_ramp(Ramp &&ramp){Ramps.add(ramp);}
     void remove_ramp(ElementID id);
@@ -67,8 +70,10 @@ public:
     NodeCollection<Ramp>::iterator find_ramp_by_id(ElementID id) {return Ramps.find_by_id(id);}
     NodeCollection<Ramp>::const_iterator find_ramp_by_id(ElementID id) const {return Ramps.find_by_id(id);}
 
-    NodeCollection<Ramp>::const_iterator ramp_cbegin() {return Ramps.cbegin();}
-    NodeCollection<Ramp>::const_iterator ramp_cend() {return Ramps.cend();}
+    NodeCollection<Ramp>::const_iterator ramp_cbegin() const {return Ramps.cbegin();}
+    NodeCollection<Ramp>::const_iterator ramp_cend() const {return Ramps.cend();}
+    NodeCollection<Ramp>::const_iterator ramp_begin() const {return Ramps.begin();}
+    NodeCollection<Ramp>::const_iterator ramp_end() const {return Ramps.end();}
 
 
     // WORKER
@@ -78,8 +83,10 @@ public:
     NodeCollection<Worker>::iterator find_worker_by_id(ElementID id) {return Workers.find_by_id(id);}
     NodeCollection<Worker>::const_iterator find_worker_by_id(ElementID id) const {return Workers.find_by_id(id);}
 
-    NodeCollection<Worker>::const_iterator worker_cbegin() {return Workers.cbegin();}
-    NodeCollection<Worker>::const_iterator worker_cend() {return Workers.cend();}
+    NodeCollection<Worker>::const_iterator worker_cbegin() const {return Workers.cbegin();}
+    NodeCollection<Worker>::const_iterator worker_cend() const {return Workers.cend();}
+    NodeCollection<Worker>::const_iterator worker_begin() const {return Workers.begin();}
+    NodeCollection<Worker>::const_iterator worker_end() const {return Workers.end();}
 
 
     // STOREHOUSE
@@ -89,9 +96,10 @@ public:
     NodeCollection<Storehouse>::iterator find_storehouse_by_id(ElementID id) {return Storehouses.find_by_id(id);}
     NodeCollection<Storehouse>::const_iterator find_storehouse_by_id(ElementID id) const {return Storehouses.find_by_id(id);}
 
-    NodeCollection<Storehouse>::const_iterator storehouse_cbegin() {return Storehouses.cbegin();}
-    NodeCollection<Storehouse>::const_iterator storehouse_cend() {return Storehouses.cend();}
-
+    NodeCollection<Storehouse>::const_iterator storehouse_cbegin() const {return Storehouses.cbegin();}
+    NodeCollection<Storehouse>::const_iterator storehouse_cend() const {return Storehouses.cend();}
+    NodeCollection<Storehouse>::const_iterator storehouse_begin() const {return Storehouses.begin();}
+    NodeCollection<Storehouse>::const_iterator storehouse_end() const {return Storehouses.end();}
 private:
     NodeCollection<Ramp> Ramps;
     NodeCollection<Worker> Workers;
@@ -100,6 +108,26 @@ private:
     template<typename Node>
     void remove_receiver(NodeCollection<Node>& collection, ElementID id);
 };
+
+
+// IO_FACTORY_UPDATE
+enum class ElementType{
+    RAMP, WORKER, STOREHOUSE, LINK
+};
+
+struct ParsedLineData{
+    ParsedLineData(ElementType et, std::map<std::string, std::string> map): element_type(et),  parameters (std::move(map)) {};
+
+    ElementType element_type;
+    std::map<std::string, std::string> parameters;
+};
+
+
+ParsedLineData parse_line (std::string line);
+
+Factory load_factory_structure(std::istream& is);
+
+void save_factory_structure (Factory& factory, std::ostream& os);
 
 
 #endif //NETSIM_FACTORY_HPP
