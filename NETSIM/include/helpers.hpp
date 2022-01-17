@@ -2,8 +2,9 @@
 // Created by Julia on 01.01.2022.
 //
 
-#ifndef NETSIM_HELPERS_HPP
-#define NETSIM_HELPERS_HPP
+
+#ifndef HELPERS_HPP_
+#define HELPERS_HPP_
 
 #include <functional>
 #include <random>
@@ -17,4 +18,4 @@ extern double default_probability_generator();
 
 extern ProbabilityGenerator probability_generator;
 
-#endif //NETSIM_HELPERS_HPP
+#endif /* HELPERS_HPP_ */

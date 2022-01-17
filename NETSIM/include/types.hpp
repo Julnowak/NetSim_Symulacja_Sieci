@@ -5,7 +5,6 @@
 #ifndef NETSIM_TYPES_HPP
 #define NETSIM_TYPES_HPP
 
-#include "../config.hpp"
 #include <functional>
 
 using ElementID = unsigned int;     // Używamy, gdyż liczby nie są ujemne

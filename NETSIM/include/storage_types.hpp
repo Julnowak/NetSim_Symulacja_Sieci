@@ -5,7 +5,6 @@
 #ifndef NETSIM_STORAGE_TYPES_HPP
 #define NETSIM_STORAGE_TYPES_HPP
 
-#include "../config.hpp"
 #include "package.hpp"
 #include "types.hpp"
 #include <list>

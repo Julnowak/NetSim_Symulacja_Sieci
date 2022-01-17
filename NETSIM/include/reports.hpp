@@ -4,7 +4,7 @@
 
 #ifndef NETSIM_REPORTS_HPP
 #define NETSIM_REPORTS_HPP
-#include "../config.hpp"
+
 #include "factory.hpp"
 
 // Raportowanie

@@ -7,7 +7,6 @@
 
 #include "nodes.hpp"
 #include "types.hpp"
-#include "../config.hpp"
 
 #include <algorithm>
 #include <exception>
