@@ -8,7 +8,7 @@
 #include "types.hpp"
 #include "helpers.hpp"
 #include "storage_types.hpp"
-#include "../config.hpp"
+#include "config.hpp"
 
 #include <iostream>
 #include <memory>
